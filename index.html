@@ -42,7 +42,8 @@
         input[type="tel"],
         input[type="email"],
         input[type="number"],
-        input[type="date"] {
+        input[type="date"],
+        select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -133,6 +134,25 @@
                 <input type="date" id="date" name="date" required>
             </div>
 
+            <div class="form-group">
+                <label for="paymentBy">Payment By:</label>
+                <select id="paymentBy" name="paymentBy" required>
+                    <option value="">Select Payment By</option>
+                    <option value="student">Student</option>
+                    <option value="teaching_staff">Teaching Staff</option>
+                    <option value="non_teaching_staff">Non-Teaching Staff</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method:</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="cash">Cash</option>
+                    <option value="online">Online</option>
+                </select>
+            </div>
+
             <button type="button" onclick="addToSpreadsheet()">Add to Spreadsheet</button>
             <button type="button" onclick="downloadSpreadsheet()">Download Spreadsheet</button>
             <button type="button" class="clear-button" onclick="clearForm()">Clear Form</button>
@@ -144,7 +164,7 @@
         // Create an empty workbook and worksheet
         let wb = XLSX.utils.book_new();
         let ws_data = [
-            ["Name", "Phone Number", "Email", "Class", "Department", "Amount", "Transaction ID", "Date"]
+            ["Name", "Phone Number", "Email", "Class", "Department", "Amount", "Transaction ID", "Date", "Payment By", "Payment Method"]
         ]; // Headers
         let ws = XLSX.utils.aoa_to_sheet(ws_data);
         let totalAmount = 0; // Initialize total amount variable
@@ -159,12 +179,14 @@
             const amount = parseFloat(document.getElementById("amount").value);
             const transactionId = document.getElementById("transactionId").value;
             const date = document.getElementById("date").value;
+            const paymentBy = document.getElementById("paymentBy").value;
+            const paymentMethod = document.getElementById("paymentMethod").value;
 
             // Update total amount
             totalAmount += amount;
 
             // Add the new data as a row in the worksheet
-            const newRow = [name, phone, email, classValue, department, amount, transactionId, date];
+            const newRow = [name, phone, email, classValue, department, amount, transactionId, date, paymentBy, paymentMethod];
             XLSX.utils.sheet_add_aoa(ws, [newRow], { origin: -1 });
 
             // Automatically clear the form after adding data
@@ -176,7 +198,7 @@
 
         function downloadSpreadsheet() {
             // Add total amount row to the worksheet
-            XLSX.utils.sheet_add_aoa(ws, [["Total Amount", "", "", "", "", totalAmount, "", ""]], { origin: -1 });
+            XLSX.utils.sheet_add_aoa(ws, [["Total Amount", "", "", "", "", totalAmount, "", "", "", ""]], { origin: -1 });
 
             // Append the worksheet to the workbook
             XLSX.utils.book_append_sheet(wb, ws, "Form Data");
