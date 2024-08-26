@@ -168,7 +168,6 @@
             ["Name", "Phone Number", "Email", "Class", "Department", "Amount", "Transaction ID", "Date", "Payment By", "Payment Method", "Submission Time"]
         ]; // Headers
         let ws = XLSX.utils.aoa_to_sheet(ws_data);
-        let totalAmount = 0; // Initialize total amount variable
 
         function addToSpreadsheet() {
             // Set the current time in the hidden input field
@@ -187,9 +186,6 @@
             const paymentMethod = document.getElementById("paymentMethod").value;
             const formTime = document.getElementById("formTime").value;
 
-            // Update total amount
-            totalAmount += amount;
-
             // Add the new data as a row in the worksheet
             const newRow = [name, phone, email, classValue, department, amount, transactionId, date, paymentBy, paymentMethod, formTime];
             XLSX.utils.sheet_add_aoa(ws, [newRow], { origin: -1 });
@@ -202,9 +198,6 @@
         }
 
         function downloadSpreadsheet() {
-            // Add total amount row to the worksheet
-            XLSX.utils.sheet_add_aoa(ws, [["Total Amount", "", "", "", "", totalAmount, "", "", "", ""]], { origin: -1 });
-
             // Append the worksheet to the workbook
             XLSX.utils.book_append_sheet(wb, ws, "Form Data");
 
